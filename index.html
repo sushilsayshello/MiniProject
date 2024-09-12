@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -9,30 +9,44 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f9;
+      background-color: var(--background-color);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      transition: background-color 0.3s ease;
+    }
+
+    :root {
+      --background-color: #f4f4f9;
+      --text-color: #333;
+      --container-bg-color: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --background-color: #121212;
+      --text-color: #ffffff;
+      --container-bg-color: #1f1f1f;
     }
 
     .container {
       max-width: 600px;
       width: 100%;
       padding: 20px;
-      background-color: #ffffff;
+      background-color: var(--container-bg-color);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       text-align: center;
+      transition: background-color 0.3s ease;
     }
 
     h1 {
-      color: #333;
+      color: var(--text-color);
     }
 
     label {
       font-size: 1rem;
-      color: #333;
+      color: var(--text-color);
     }
 
     input[type="text"] {
@@ -134,6 +148,23 @@
       background-color: #28a745;
       border-radius: 5px;
     }
+
+    .dark-mode-toggle {
+      margin-top: 20px;
+    }
+
+    .delete-history-btn {
+      background-color: #dc3545;
+      margin-top: 10px;
+      width: 100%;
+      padding: 12px;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .delete-history-btn:hover {
+      background-color: #c82333;
+    }
   </style>
 </head>
 <body>
@@ -156,7 +187,12 @@
     <div class="history" id="history">
       <h3>Classification History:</h3>
       <ul id="historyList"></ul>
+      <button id="deleteHistoryBtn" class="delete-history-btn">Clear History</button>
     </div>
+
+    <label class="dark-mode-toggle">
+      <input type="checkbox" id="toggleDarkMode"> Dark Mode
+    </label>
   </div>
 
   <script>
@@ -167,28 +203,36 @@
     const progressBar = document.getElementById('progressBar');
     const progress = document.getElementById('progress');
     const historyList = document.getElementById('historyList');
+    const deleteHistoryBtn = document.getElementById('deleteHistoryBtn');
+    const toggleDarkMode = document.getElementById('toggleDarkMode');
+    let classificationHistory = JSON.parse(localStorage.getItem('classificationHistory')) || [];
 
-    let classificationHistory = [];
+    // Load stored history on page load
+    window.onload = () => {
+      classificationHistory.forEach(item => addToHistory(item.url, item.status));
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        toggleDarkMode.checked = true;
+      }
+    };
 
-    classifyBtn.addEventListener('click', function() {
+    classifyBtn.addEventListener('click', function () {
       const url = document.getElementById('urlInput').value.trim();
       resultDiv.style.display = 'none';
       spinner.style.display = 'block';
       progressBar.style.display = 'block';
       progress.style.width = '0%';
-      
-      // URL Validation
+
       if (!validateURL(url)) {
         showError('Please enter a valid URL.');
         return;
       }
 
-      simulateProgress(80, function() {
+      simulateProgress(80, function () {
         spinner.style.display = 'none';
         progressBar.style.display = 'none';
 
-        // Simulate classification
-        const isMalicious = Math.random() < 0.5; // Randomly classify
+        const isMalicious = Math.random() < 0.5;
 
         if (isMalicious) {
           showResult(url, 'malicious');
@@ -198,11 +242,15 @@
       });
     });
 
-    clearBtn.addEventListener('click', function() {
+    clearBtn.addEventListener('click', function () {
       document.getElementById('urlInput').value = '';
       resultDiv.style.display = 'none';
       progressBar.style.display = 'none';
       spinner.style.display = 'none';
+    });
+
+    deleteHistoryBtn.addEventListener('click', function () {
+      clearHistory();
     });
 
     function showResult(url, status) {
@@ -215,6 +263,7 @@
       resultDiv.style.display = 'block';
 
       addToHistory(url, status);
+      storeHistory(url, status);
     }
 
     function showError(message) {
@@ -226,16 +275,27 @@
     }
 
     function addToHistory(url, status) {
-      classificationHistory.push({ url, status });
       const historyItem = document.createElement('li');
       historyItem.className = `history-item ${status}`;
       historyItem.innerHTML = `<strong>${url}</strong> - ${status.charAt(0).toUpperCase() + status.slice(1)}`;
       historyList.appendChild(historyItem);
     }
 
+    function storeHistory(url, status) {
+      classificationHistory.push({ url, status });
+      localStorage.setItem('classificationHistory', JSON.stringify(classificationHistory));
+    }
+
+    function clearHistory() {
+      classificationHistory = [];
+      localStorage.removeItem('classificationHistory');
+      // Clear the visual history from the page
+      historyList.innerHTML = '';
+    }
+
     function simulateProgress(duration, callback) {
       let width = 0;
-      const interval = setInterval(function() {
+      const interval = setInterval(function () {
         if (width >= 100) {
           clearInterval(interval);
           callback();
@@ -250,8 +310,20 @@
       const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
       return regex.test(url);
     }
+
+    // Dark Mode Toggle
+    toggleDarkMode.addEventListener('change', function () {
+      if (this.checked) {
+        document.body.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      }
+    });
   </script>
 
 </body>
 </html>
+
 
