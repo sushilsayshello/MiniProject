@@ -1,6 +1,6 @@
 # MiniProject
 
-# Website Classification App
+## Website Classification App
 
 This is a simple web-based application to classify websites as **Malicious** or **Benign** based on a predefined list of sample websites. The app is built with HTML, CSS, and JavaScript, and can be used for educational or demonstration purposes.
 
@@ -14,14 +14,32 @@ This is a simple web-based application to classify websites as **Malicious** or 
 
 ## Live Demo
 
-Try out the app https://sushilsayshello.github.io/MiniProject/ 
+Try out the app: [https://sushilsayshello.github.io/MiniProject/](https://sushilsayshello.github.io/MiniProject/)
 
 ## How to Use
 
-1. **Enter a website URL**: Type the full URL (including `http://` or `https://`) in the input field.
-2. **Classify**: Click on the "Classify Website" button to classify the website as **Benign** or **Malicious** based on the predefined list.
-3. **Clear History**: Click the "Clear History" button to remove classification history from the page.
-4. **Dark Mode**: Toggle the dark mode by checking/unchecking the checkbox at the bottom.
+<table>
+  <tr>
+    <th>Action</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>Enter a website URL</td>
+    <td>Type the full URL (including <code>http://</code> or <code>https://</code>) in the input field.</td>
+  </tr>
+  <tr>
+    <td>Classify</td>
+    <td>Click on the "Classify Website" button to classify the website as **Benign** or **Malicious** based on the predefined list.</td>
+  </tr>
+  <tr>
+    <td>Clear History</td>
+    <td>Click the "Clear History" button to remove classification history from the page.</td>
+  </tr>
+  <tr>
+    <td>Dark Mode</td>
+    <td>Toggle the dark mode by checking/unchecking the checkbox at the bottom.</td>
+  </tr>
+</table>
 
 ## Predefined Sample Data
 
@@ -29,32 +47,100 @@ The app classifies websites using a predefined list of benign and malicious webs
 
 ### Benign Websites:
 
-| Website           | URL                                    |
-|-------------------|----------------------------------------|
-| Example           | https://example.com                    |
-| Google            | https://google.com                     |
-| GitHub            | https://github.com                     |
-| StackOverflow     | https://stackoverflow.com              |
-| Microsoft         | https://microsoft.com                  |
-| Apple             | https://apple.com                      |
-| BBC               | https://bbc.com                        |
-| New York Times    | https://nytimes.com                    |
-| LinkedIn          | https://linkedin.com                   |
-| Wikipedia         | https://wikipedia.org                  |
+<table>
+  <tr>
+    <th>Website</th>
+    <th>URL</th>
+  </tr>
+  <tr>
+    <td>Example</td>
+    <td>https://example.com</td>
+  </tr>
+  <tr>
+    <td>Google</td>
+    <td>https://google.com</td>
+  </tr>
+  <tr>
+    <td>GitHub</td>
+    <td>https://github.com</td>
+  </tr>
+  <tr>
+    <td>StackOverflow</td>
+    <td>https://stackoverflow.com</td>
+  </tr>
+  <tr>
+    <td>Microsoft</td>
+    <td>https://microsoft.com</td>
+  </tr>
+  <tr>
+    <td>Apple</td>
+    <td>https://apple.com</td>
+  </tr>
+  <tr>
+    <td>BBC</td>
+    <td>https://bbc.com</td>
+  </tr>
+  <tr>
+    <td>New York Times</td>
+    <td>https://nytimes.com</td>
+  </tr>
+  <tr>
+    <td>LinkedIn</td>
+    <td>https://linkedin.com</td>
+  </tr>
+  <tr>
+    <td>Wikipedia</td>
+    <td>https://wikipedia.org</td>
+  </tr>
+</table>
 
 ### Malicious Websites (for simulation purposes):
 
-| Website           | URL                                    |
-|-------------------|----------------------------------------|
-| Bad Website       | http://badwebsite.com                  |
-| Phishing Site     | http://phishingsite.net                |
-| Malware Site      | http://malwaresite.org                 |
-| Ransomware Attack | http://ransomwareattack.com            |
-| Fraudulent Page   | http://fraudulentpage.net              |
-| Scam Website      | http://scamwebsite.com                 |
-| Phishing Scam     | http://phishingscam.com                |
-| Malicious Domain  | http://maliciousdomain.net             |
-| Dangerous Page    | http://dangerouspage.com               |
-| Untrusted Website | http://untrustedwebsite.org            |
+<table>
+  <tr>
+    <th>Website</th>
+    <th>URL</th>
+  </tr>
+  <tr>
+    <td>Bad Website</td>
+    <td>http://badwebsite.com</td>
+  </tr>
+  <tr>
+    <td>Phishing Site</td>
+    <td>http://phishingsite.net</td>
+  </tr>
+  <tr>
+    <td>Malware Site</td>
+    <td>http://malwaresite.org</td>
+  </tr>
+  <tr>
+    <td>Ransomware Attack</td>
+    <td>http://ransomwareattack.com</td>
+  </tr>
+  <tr>
+    <td>Fraudulent Page</td>
+    <td>http://fraudulentpage.net</td>
+  </tr>
+  <tr>
+    <td>Scam Website</td>
+    <td>http://scamwebsite.com</td>
+  </tr>
+  <tr>
+    <td>Phishing Scam</td>
+    <td>http://phishingscam.com</td>
+  </tr>
+  <tr>
+    <td>Malicious Domain</td>
+    <td>http://maliciousdomain.net</td>
+  </tr>
+  <tr>
+    <td>Dangerous Page</td>
+    <td>http://dangerouspage.com</td>
+  </tr>
+  <tr>
+    <td>Untrusted Website</td>
+    <td>http://untrustedwebsite.org</td>
+  </tr>
+</table>
 
 These sample websites are used to simulate classification.
