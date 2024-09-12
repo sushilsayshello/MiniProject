@@ -144,3 +144,6 @@ The app classifies websites using a predefined list of benign and malicious webs
 </table>
 
 These sample websites are used to simulate classification.
+
+![image](https://github.com/user-attachments/assets/0ae98b34-12fe-4561-b22a-05d00e813441)
+
