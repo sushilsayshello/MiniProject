@@ -1,1 +1,257 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Classification App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      padding: 20px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    label {
+      font-size: 1rem;
+      color: #333;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .clear-btn {
+      background-color: #ff6347;
+      margin-top: 10px;
+    }
+
+    .clear-btn:hover {
+      background-color: #ff4500;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      text-align: center;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .benign {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .malicious {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .spinner {
+      display: none;
+      margin: 10px auto;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #28a745;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .history {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .history-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    .progress-bar {
+      display: none;
+      width: 100%;
+      background-color: #ddd;
+      height: 20px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .progress {
+      width: 0;
+      height: 100%;
+      background-color: #28a745;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Website Classification</h1>
+    <label for="urlInput">Enter a Website URL</label>
+    <input type="text" id="urlInput" placeholder="https://example.com">
+    <button id="classifyBtn">Classify Website</button>
+    <button id="clearBtn" class="clear-btn">Clear</button>
+
+    <div class="spinner" id="spinner"></div>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div id="result" class="result"></div>
+
+    <div class="history" id="history">
+      <h3>Classification History:</h3>
+      <ul id="historyList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const classifyBtn = document.getElementById('classifyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const resultDiv = document.getElementById('result');
+    const spinner = document.getElementById('spinner');
+    const progressBar = document.getElementById('progressBar');
+    const progress = document.getElementById('progress');
+    const historyList = document.getElementById('historyList');
+
+    let classificationHistory = [];
+
+    classifyBtn.addEventListener('click', function() {
+      const url = document.getElementById('urlInput').value.trim();
+      resultDiv.style.display = 'none';
+      spinner.style.display = 'block';
+      progressBar.style.display = 'block';
+      progress.style.width = '0%';
+      
+      // URL Validation
+      if (!validateURL(url)) {
+        showError('Please enter a valid URL.');
+        return;
+      }
+
+      simulateProgress(80, function() {
+        spinner.style.display = 'none';
+        progressBar.style.display = 'none';
+
+        // Simulate classification
+        const isMalicious = Math.random() < 0.5; // Randomly classify
+
+        if (isMalicious) {
+          showResult(url, 'malicious');
+        } else {
+          showResult(url, 'benign');
+        }
+      });
+    });
+
+    clearBtn.addEventListener('click', function() {
+      document.getElementById('urlInput').value = '';
+      resultDiv.style.display = 'none';
+      progressBar.style.display = 'none';
+      spinner.style.display = 'none';
+    });
+
+    function showResult(url, status) {
+      const resultText = status === 'malicious'
+        ? `The website <strong>${url}</strong> is classified as <strong>Malicious</strong>.`
+        : `The website <strong>${url}</strong> is classified as <strong>Benign</strong>.`;
+
+      resultDiv.innerHTML = resultText;
+      resultDiv.className = `result ${status}`;
+      resultDiv.style.display = 'block';
+
+      addToHistory(url, status);
+    }
+
+    function showError(message) {
+      resultDiv.innerHTML = message;
+      resultDiv.className = 'result error';
+      resultDiv.style.display = 'block';
+      spinner.style.display = 'none';
+      progressBar.style.display = 'none';
+    }
+
+    function addToHistory(url, status) {
+      classificationHistory.push({ url, status });
+      const historyItem = document.createElement('li');
+      historyItem.className = `history-item ${status}`;
+      historyItem.innerHTML = `<strong>${url}</strong> - ${status.charAt(0).toUpperCase() + status.slice(1)}`;
+      historyList.appendChild(historyItem);
+    }
+
+    function simulateProgress(duration, callback) {
+      let width = 0;
+      const interval = setInterval(function() {
+        if (width >= 100) {
+          clearInterval(interval);
+          callback();
+        } else {
+          width++;
+          progress.style.width = width + '%';
+        }
+      }, duration);
+    }
+
+    function validateURL(url) {
+      const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      return regex.test(url);
+    }
+  </script>
+
+</body>
+</html>
 
