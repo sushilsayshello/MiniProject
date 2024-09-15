@@ -252,28 +252,3 @@
       localStorage.setItem('classificationHistory', JSON.stringify(classificationHistory));
     }
 
-    function clearHistory() {
-      classificationHistory = [];
-      localStorage.removeItem('classificationHistory');
-      historyList.innerHTML = '';
-    }
-
-    function validateURL(url) {
-      const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
-      return regex.test(url);
-    }
-
-    // Dark Mode Toggle
-    toggleDarkMode.addEventListener('change', function () {
-      if (this.checked) {
-        document.body.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.body.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-      }
-    });
-  </script>
-
-</body>
-</html>
