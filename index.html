@@ -21,22 +21,27 @@
       --background-color: #f4f4f9;
       --text-color: #333;
       --container-bg-color: #ffffff;
+      --link-color: #007bff;
+      --link-hover-color: #0056b3;
     }
 
     [data-theme="dark"] {
       --background-color: #121212;
       --text-color: #ffffff;
       --container-bg-color: #1f1f1f;
+      --link-color: #66c0f4;
+      --link-hover-color: #339af0;
     }
 
     .container {
-      max-width: 600px;
+      max-width: 800px;
       width: 100%;
       padding: 20px;
       background-color: var(--container-bg-color);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       text-align: center;
+      margin-top: 500px;
       transition: background-color 0.3s ease;
     }
 
@@ -133,12 +138,63 @@
     .delete-history-btn:hover {
       background-color: #c82333;
     }
+
+    .list-section {
+      margin-top: 20px;
+      text-align: left;
+      padding: 10px;
+      background-color: var(--container-bg-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      width: 100%;
+      text-align: left;
+    }
+
+    .list-section h2 {
+      color: var(--text-color);
+      margin-top: 0;
+    }
+
+    .list-section ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .list-section li {
+      padding: 5px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .list-section a {
+      color: var(--link-color);
+      text-decoration: none;
+    }
+
+    .list-section a:hover {
+      color: var(--link-hover-color);
+    }
+    .notice {
+      background-color: #ffefc4;
+      color: #dc3545; /* Red color for the entire text */
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid #ffeeba;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
   </style>
 </head>
 <body>
 
   <div class="container">
     <h1>Website Classification</h1>
+        <div class="notice">
+      <strong>Notice:</strong> This is a prototype web application. It does not provide real-time website classification or integration with live data.
+    </div> </br>
     <label for="urlInput">Enter a Website URL</label>
     <input type="text" id="urlInput" placeholder="https://example.com">
     <button id="classifyBtn">Classify Website</button>
@@ -150,6 +206,38 @@
       <h3>Classification History:</h3>
       <ul id="historyList"></ul>
       <button id="deleteHistoryBtn" class="delete-history-btn">Clear History</button>
+    </div>
+
+    <div class="list-section">
+      <h2>Benign Websites</h2>
+      <ul id="benignList">
+        <li>Example: <a href="https://example.com" target="_blank">https://example.com</a></li>
+        <li>Google: <a href="https://google.com" target="_blank">https://google.com</a></li>
+        <li>GitHub: <a href="https://github.com" target="_blank">https://github.com</a></li>
+        <li>StackOverflow: <a href="https://stackoverflow.com" target="_blank">https://stackoverflow.com</a></li>
+        <li>Microsoft: <a href="https://microsoft.com" target="_blank">https://microsoft.com</a></li>
+        <li>Apple: <a href="https://apple.com" target="_blank">https://apple.com</a></li>
+        <li>BBC: <a href="https://bbc.com" target="_blank">https://bbc.com</a></li>
+        <li>New York Times: <a href="https://nytimes.com" target="_blank">https://nytimes.com</a></li>
+        <li>LinkedIn: <a href="https://linkedin.com" target="_blank">https://linkedin.com</a></li>
+        <li>Wikipedia: <a href="https://wikipedia.org" target="_blank">https://wikipedia.org</a></li>
+      </ul>
+    </div>
+
+    <div class="list-section">
+      <h2>Malicious Websites</h2>
+      <ul id="maliciousList">
+        <li>Bad Website: <a href="http://badwebsite.com" target="_blank">http://badwebsite.com</a></li>
+        <li>Phishing Site: <a href="http://phishingsite.net" target="_blank">http://phishingsite.net</a></li>
+        <li>Malware Site: <a href="http://malwaresite.org" target="_blank">http://malwaresite.org</a></li>
+        <li>Ransomware Attack: <a href="http://ransomwareattack.com" target="_blank">http://ransomwareattack.com</a></li>
+        <li>Fraudulent Page: <a href="http://fraudulentpage.net" target="_blank">http://fraudulentpage.net</a></li>
+        <li>Scam Website: <a href="http://scamwebsite.com" target="_blank">http://scamwebsite.com</a></li>
+        <li>Phishing Scam: <a href="http://phishingscam.com" target="_blank">http://phishingscam.com</a></li>
+        <li>Malicious Domain: <a href="http://maliciousdomain.net" target="_blank">http://maliciousdomain.net</a></li>
+        <li>Dangerous Page: <a href="http://dangerouspage.com" target="_blank">http://dangerouspage.com</a></li>
+        <li>Untrusted Website: <a href="http://untrustedwebsite.org" target="_blank">http://untrustedwebsite.org</a></li>
+      </ul>
     </div>
 
     <label class="dark-mode-toggle">
@@ -166,7 +254,6 @@
     const toggleDarkMode = document.getElementById('toggleDarkMode');
     let classificationHistory = JSON.parse(localStorage.getItem('classificationHistory')) || [];
 
-    // Predefined data for classification
     const benignWebsites = [
       'https://example.com', 'https://google.com', 'https://github.com', 
       'https://stackoverflow.com', 'https://microsoft.com', 'https://apple.com', 
@@ -181,7 +268,6 @@
       'http://untrustedwebsite.org'
     ];
 
-    // Load stored history on page load
     window.onload = () => {
       classificationHistory.forEach(item => addToHistory(item.url, item.status));
       if (localStorage.getItem('theme') === 'dark') {
@@ -263,7 +349,6 @@
       return regex.test(url);
     }
 
-    // Dark Mode Toggle
     toggleDarkMode.addEventListener('change', function () {
       if (this.checked) {
         document.body.setAttribute('data-theme', 'dark');
