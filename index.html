@@ -1,1 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Classification App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      transition: background-color 0.3s ease;
+    }
+
+    :root {
+      --background-color: #f4f4f9;
+      --text-color: #333;
+      --container-bg-color: #ffffff;
+      --link-color: #007bff;
+      --link-hover-color: #0056b3;
+    }
+
+    [data-theme="dark"] {
+      --background-color: #121212;
+      --text-color: #ffffff;
+      --container-bg-color: #1f1f1f;
+      --link-color: #66c0f4;
+      --link-hover-color: #339af0;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      padding: 20px;
+      background-color: var(--container-bg-color);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      text-align: center;
+      margin-top: 500px;
+      transition: background-color 0.3s ease;
+    }
+
+    h1 {
+      color: var(--text-color);
+    }
+
+    label {
+      font-size: 1rem;
+      color: var(--text-color);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .clear-btn {
+      background-color: #ff6347;
+      margin-top: 10px;
+    }
+
+    .clear-btn:hover {
+      background-color: #ff4500;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      text-align: center;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .benign {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .malicious {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .history {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .history-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    .dark-mode-toggle {
+      margin-top: 20px;
+    }
+
+    .delete-history-btn {
+      background-color: #dc3545;
+      margin-top: 10px;
+      width: 100%;
+      padding: 12px;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .delete-history-btn:hover {
+      background-color: #c82333;
+    }
+
+    .list-section {
+      margin-top: 20px;
+      text-align: left;
+      padding: 10px;
+      background-color: var(--container-bg-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      width: 100%;
+      text-align: left;
+    }
+
+    .list-section h2 {
+      color: var(--text-color);
+      margin-top: 0;
+    }
+
+    .list-section ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .list-section li {
+      padding: 5px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .list-section a {
+      color: var(--link-color);
+      text-decoration: none;
+    }
+
+    .list-section a:hover {
+      color: var(--link-hover-color);
+    }
+    .notice {
+      background-color: #ffefc4;
+      color: #dc3545; /* Red color for the entire text */
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid #ffeeba;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Website Classification</h1>
+        <div class="notice">
+      <strong>Notice:</strong> This is a prototype web application. It does not provide real-time website classification or integration with live data.
+    </div> </br>
+    <label for="urlInput">Enter a Website URL</label>
+    <input type="text" id="urlInput" placeholder="https://example.com">
+    <button id="classifyBtn">Classify Website</button>
+    <button id="clearBtn" class="clear-btn">Clear</button>
+
+    <div id="result" class="result"></div>
+
+    <div class="history" id="history">
+      <h3>Classification History:</h3>
+      <ul id="historyList"></ul>
+      <button id="deleteHistoryBtn" class="delete-history-btn">Clear History</button>
+    </div>
+
+    <div class="list-section">
+      <h2>Benign Websites</h2>
+      <ul id="benignList">
+        <li>Example: <a href="https://example.com" target="_blank">https://example.com</a></li>
+        <li>Google: <a href="https://google.com" target="_blank">https://google.com</a></li>
+        <li>GitHub: <a href="https://github.com" target="_blank">https://github.com</a></li>
+        <li>StackOverflow: <a href="https://stackoverflow.com" target="_blank">https://stackoverflow.com</a></li>
+        <li>Microsoft: <a href="https://microsoft.com" target="_blank">https://microsoft.com</a></li>
+        <li>Apple: <a href="https://apple.com" target="_blank">https://apple.com</a></li>
+        <li>BBC: <a href="https://bbc.com" target="_blank">https://bbc.com</a></li>
+        <li>New York Times: <a href="https://nytimes.com" target="_blank">https://nytimes.com</a></li>
+        <li>LinkedIn: <a href="https://linkedin.com" target="_blank">https://linkedin.com</a></li>
+        <li>Wikipedia: <a href="https://wikipedia.org" target="_blank">https://wikipedia.org</a></li>
+      </ul>
+    </div>
+
+    <div class="list-section">
+      <h2>Malicious Websites</h2>
+      <ul id="maliciousList">
+        <li>Bad Website: <a href="http://badwebsite.com" target="_blank">http://badwebsite.com</a></li>
+        <li>Phishing Site: <a href="http://phishingsite.net" target="_blank">http://phishingsite.net</a></li>
+        <li>Malware Site: <a href="http://malwaresite.org" target="_blank">http://malwaresite.org</a></li>
+        <li>Ransomware Attack: <a href="http://ransomwareattack.com" target="_blank">http://ransomwareattack.com</a></li>
+        <li>Fraudulent Page: <a href="http://fraudulentpage.net" target="_blank">http://fraudulentpage.net</a></li>
+        <li>Scam Website: <a href="http://scamwebsite.com" target="_blank">http://scamwebsite.com</a></li>
+        <li>Phishing Scam: <a href="http://phishingscam.com" target="_blank">http://phishingscam.com</a></li>
+        <li>Malicious Domain: <a href="http://maliciousdomain.net" target="_blank">http://maliciousdomain.net</a></li>
+        <li>Dangerous Page: <a href="http://dangerouspage.com" target="_blank">http://dangerouspage.com</a></li>
+        <li>Untrusted Website: <a href="http://untrustedwebsite.org" target="_blank">http://untrustedwebsite.org</a></li>
+      </ul>
+    </div>
+
+    <label class="dark-mode-toggle">
+      <input type="checkbox" id="toggleDarkMode"> Dark Mode
+    </label>
+  </div>
+
+  <script>
+    const classifyBtn = document.getElementById('classifyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const resultDiv = document.getElementById('result');
+    const historyList = document.getElementById('historyList');
+    const deleteHistoryBtn = document.getElementById('deleteHistoryBtn');
+    const toggleDarkMode = document.getElementById('toggleDarkMode');
+    let classificationHistory = JSON.parse(localStorage.getItem('classificationHistory')) || [];
+
+    const benignWebsites = [
+      'https://example.com', 'https://google.com', 'https://github.com', 
+      'https://stackoverflow.com', 'https://microsoft.com', 'https://apple.com', 
+      'https://bbc.com', 'https://nytimes.com', 'https://linkedin.com', 
+      'https://wikipedia.org'
+    ];
+
+    const maliciousWebsites = [
+      'http://badwebsite.com', 'http://phishingsite.net', 'http://malwaresite.org', 
+      'http://ransomwareattack.com', 'http://fraudulentpage.net', 'http://scamwebsite.com', 
+      'http://phishingscam.com', 'http://maliciousdomain.net', 'http://dangerouspage.com', 
+      'http://untrustedwebsite.org'
+    ];
+
+    window.onload = () => {
+      classificationHistory.forEach(item => addToHistory(item.url, item.status));
+      if (localStorage.getItem('theme') === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        toggleDarkMode.checked = true;
+      }
+    };
+
+    classifyBtn.addEventListener('click', function () {
+      const url = document.getElementById('urlInput').value.trim();
+      resultDiv.style.display = 'none';
+
+      if (!validateURL(url)) {
+        showError('Please enter a valid URL.');
+        return;
+      }
+
+      classifyWebsite(url);
+    });
+
+    clearBtn.addEventListener('click', function () {
+      document.getElementById('urlInput').value = '';
+      resultDiv.style.display = 'none';
+    });
+
+    deleteHistoryBtn.addEventListener('click', function () {
+      clearHistory();
+    });
+
+    function classifyWebsite(url) {
+      if (maliciousWebsites.includes(url)) {
+        showResult(url, 'malicious');
+      } else if (benignWebsites.includes(url)) {
+        showResult(url, 'benign');
+      } else {
+        showError('The website is not in our database.');
+      }
+    }
+
+    function showResult(url, status) {
+      const resultText = status === 'malicious'
+        ? `The website <strong>${url}</strong> is classified as <strong>Malicious</strong>.`
+        : `The website <strong>${url}</strong> is classified as <strong>Benign</strong>.`;
+
+      resultDiv.innerHTML = resultText;
+      resultDiv.className = `result ${status}`;
+      resultDiv.style.display = 'block';
+
+      addToHistory(url, status);
+      storeHistory(url, status);
+    }
+
+    function showError(message) {
+      resultDiv.innerHTML = message;
+      resultDiv.className = 'result error';
+      resultDiv.style.display = 'block';
+    }
+
+    function addToHistory(url, status) {
+      const historyItem = document.createElement('li');
+      historyItem.className = `history-item ${status}`;
+      historyItem.innerHTML = `<strong>${url}</strong> - ${status.charAt(0).toUpperCase() + status.slice(1)}`;
+      historyList.appendChild(historyItem);
+    }
+
+    function storeHistory(url, status) {
+      classificationHistory.push({ url, status });
+      localStorage.setItem('classificationHistory', JSON.stringify(classificationHistory));
+    }
+
+    function clearHistory() {
+      classificationHistory = [];
+      localStorage.removeItem('classificationHistory');
+      historyList.innerHTML = '';
+    }
+
+    function validateURL(url) {
+      const regex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      return regex.test(url);
+    }
+
+    toggleDarkMode.addEventListener('change', function () {
+      if (this.checked) {
+        document.body.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  </script>
+
+</body>
+</html>
 
